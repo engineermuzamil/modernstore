@@ -46,7 +46,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/register", async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
-      
+
       // Check if user already exists
       const existingUser = await storage.getUserByEmail(userData.email);
       if (existingUser) {
@@ -55,7 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Hash password
       const hashedPassword = await bcrypt.hash(userData.password, 10);
-      
+
       const user = await storage.createUser({
         ...userData,
         password: hashedPassword,
@@ -77,7 +77,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email, password } = req.body;
-      
+
       const user = await storage.getUserByEmail(email);
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
@@ -173,6 +173,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Cart routes
   app.get("/api/cart", authenticateToken, async (req: any, res) => {
     try {
+      // Prevent admin users from accessing cart
+      if (req.user.isAdmin) {
+        return res.status(403).json({
+          message: "Admin users cannot access cart. Please use a regular customer account."
+        });
+      }
+
       const cartItems = await storage.getCartItems(req.user.id);
       res.json(cartItems);
     } catch (error) {
@@ -183,12 +190,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/cart", authenticateToken, async (req: any, res) => {
     try {
+      // Prevent admin users from adding to cart
+      if (req.user.isAdmin) {
+        return res.status(403).json({
+          message: "Admin users cannot add items to cart. Please use a regular customer account."
+        });
+      }
+
       const { productId, quantity = 1 } = req.body;
-      const cartItem = await storage.addToCart({
-        userId: req.user.id,
-        productId,
-        quantity,
-      });
+
+      // Check product stock
+      const product = await storage.getProduct(productId);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      // Check existing cart item
+      const existingCartItems = await storage.getCartItems(req.user.id);
+      const existingItem = existingCartItems.find(item => item.productId === productId);
+      const newQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+
+      // Check if there's enough stock
+      if ((product.stock || 0) < newQuantity) {
+        return res.status(400).json({
+          message: `Insufficient stock. Available: ${product.stock || 0}, Requested: ${newQuantity}`
+        });
+      }
+
+      let cartItem;
+      if (existingItem) {
+        // Update existing item
+        cartItem = await storage.updateCartItem(req.user.id, productId, newQuantity);
+      } else {
+        // Add new item
+        cartItem = await storage.addToCart({
+          userId: req.user.id,
+          productId,
+          quantity,
+        });
+      }
+
       res.status(201).json(cartItem);
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -198,7 +239,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/cart/:productId", authenticateToken, async (req: any, res) => {
     try {
+      // Prevent admin users from updating cart
+      if (req.user.isAdmin) {
+        return res.status(403).json({
+          message: "Admin users cannot update cart. Please use a regular customer account."
+        });
+      }
+
       const { quantity } = req.body;
+
+      // Check product stock
+      const product = await storage.getProduct(req.params.productId);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      // Check if there's enough stock
+      if ((product.stock || 0) < quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock. Available: ${product.stock || 0}, Requested: ${quantity}`
+        });
+      }
+
       const cartItem = await storage.updateCartItem(req.user.id, req.params.productId, quantity);
       res.json(cartItem);
     } catch (error) {
@@ -209,6 +271,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/cart/:productId", authenticateToken, async (req: any, res) => {
     try {
+      // Prevent admin users from removing from cart
+      if (req.user.isAdmin) {
+        return res.status(403).json({
+          message: "Admin users cannot remove items from cart. Please use a regular customer account."
+        });
+      }
+
       const success = await storage.removeFromCart(req.user.id, req.params.productId);
       if (!success) {
         return res.status(404).json({ message: "Item not found in cart" });
@@ -223,32 +292,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Order routes
   app.post("/api/orders", authenticateToken, async (req: any, res) => {
     try {
-      const orderData = insertOrderSchema.parse({
-        ...req.body,
-        userId: req.user.id,
-      });
+      // Prevent admin users from placing orders
+      if (req.user.isAdmin) {
+        return res.status(403).json({
+          message: "Admin users cannot place orders. Please use a regular customer account."
+        });
+      }
 
-      // Get cart items
+      // Get cart items first
       const cartItems = await storage.getCartItems(req.user.id);
       if (cartItems.length === 0) {
         return res.status(400).json({ message: "Cart is empty" });
       }
 
+      // Check stock availability for all items
+      for (const item of cartItems) {
+        const currentStock = item.product.stock ?? 0;
+        if (currentStock < item.quantity) {
+          return res.status(400).json({
+            message: `Insufficient stock for ${item.product.title}. Available: ${currentStock}, Requested: ${item.quantity}`
+          });
+        }
+      }
+
       // Calculate total
-      const total = cartItems.reduce((sum, item) => 
+      const total = cartItems.reduce((sum, item) =>
         sum + (parseFloat(item.product.price) * item.quantity), 0
       );
 
-      // Create order
+      const orderData = insertOrderSchema.parse({
+        ...req.body,
+        userId: req.user.id,
+        total: total.toString(),
+      });
+
+      // Create order and update stock
       const order = await storage.createOrder(
-        { ...orderData, total: total.toString() },
+        orderData,
         cartItems.map(item => ({
-          orderId: "", // Will be set by the storage function
           productId: item.productId,
           quantity: item.quantity,
-          price: item.product.price,
+          price: item.product.price.toString(),
         }))
       );
+
+      // Update product stock for each item
+      for (const item of cartItems) {
+        await storage.updateProductStock(item.productId, item.quantity);
+      }
 
       // Clear cart
       await storage.clearCart(req.user.id);
@@ -256,12 +347,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(order);
     } catch (error) {
       console.error("Error creating order:", error);
-      res.status(400).json({ message: "Failed to create order" });
+      console.error("Request body:", req.body);
+      console.error("User ID:", req.user.id);
+      res.status(400).json({
+        message: "Failed to create order",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
   app.get("/api/orders", authenticateToken, async (req: any, res) => {
     try {
+      // Prevent admin users from accessing orders
+      if (req.user.isAdmin) {
+        return res.status(403).json({
+          message: "Admin users cannot access orders. Please use a regular customer account."
+        });
+      }
+
       const orders = await storage.getUserOrders(req.user.id);
       res.json(orders);
     } catch (error) {

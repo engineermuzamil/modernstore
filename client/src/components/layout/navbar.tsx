@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, Search, User, LogOut } from "lucide-react";
+import { ShoppingCart, Search, User, LogOut, Package } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,11 @@ export function Navbar({ searchTerm, onSearchChange }: NavbarProps) {
                 <Link href="/" className={location === "/" ? "text-gray-900 hover:text-blue-600 font-medium" : "text-gray-600 hover:text-blue-600"}>
                   Home
                 </Link>
+                {!user?.isAdmin && (
+                  <Link href="/orders" className={location === "/orders" ? "text-gray-900 hover:text-blue-600 font-medium" : "text-gray-600 hover:text-blue-600"}>
+                    Orders
+                  </Link>
+                )}
                 {user?.isAdmin && (
                   <Link href="/admin" className={location === "/admin" ? "text-gray-900 hover:text-blue-600 font-medium" : "text-gray-600 hover:text-blue-600"}>
                     Admin
@@ -44,7 +49,7 @@ export function Navbar({ searchTerm, onSearchChange }: NavbarProps) {
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             {/* Search Bar - Only show on home page */}
             {location === "/" && (
@@ -60,25 +65,40 @@ export function Navbar({ searchTerm, onSearchChange }: NavbarProps) {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               </div>
             )}
-            
+
             {user ? (
               <>
-                {/* Cart Icon */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  data-testid="cart-button"
-                  onClick={() => setLocation("/cart")}
-                  className="relative p-2 text-gray-600 hover:text-blue-600"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  {getTotalItems() > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {getTotalItems()}
-                    </span>
-                  )}
-                </Button>
-                
+                {/* Orders Icon - Only show for non-admin users */}
+                {!user.isAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    data-testid="orders-button"
+                    onClick={() => setLocation("/orders")}
+                    className="p-2 text-gray-600 hover:text-blue-600"
+                  >
+                    <Package className="w-5 h-5" />
+                  </Button>
+                )}
+
+                {/* Cart Icon - Only show for non-admin users */}
+                {!user.isAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    data-testid="cart-button"
+                    onClick={() => setLocation("/cart")}
+                    className="relative p-2 text-gray-600 hover:text-blue-600"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    {getTotalItems() > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {getTotalItems()}
+                      </span>
+                    )}
+                  </Button>
+                )}
+
                 {/* User Menu */}
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-600">
@@ -87,6 +107,7 @@ export function Navbar({ searchTerm, onSearchChange }: NavbarProps) {
                   <Button
                     variant="ghost"
                     size="icon"
+                    data-testid="logout-button"
                     onClick={handleLogout}
                     className="text-gray-600 hover:text-blue-600"
                   >

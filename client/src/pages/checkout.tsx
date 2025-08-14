@@ -53,6 +53,23 @@ export default function Checkout() {
     );
   }
 
+  // Prevent admin users from accessing checkout
+  if (user.isAdmin) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card>
+          <CardContent className="p-8 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Restricted</h1>
+            <p className="text-gray-600 mb-6">Admin users cannot place orders. Please use a regular customer account.</p>
+            <Button onClick={() => setLocation("/")}>
+              Back to Home
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (cartItems.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -91,19 +108,31 @@ export default function Checkout() {
         body: JSON.stringify(form),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to place order");
+      if (response.ok) {
+        const order = await response.json();
+        clearCart();
+        
+        toast({
+          title: "Order Placed Successfully!",
+          description: `Order ID: ${order.id}`,
+        });
+        
+        setLocation("/");
+      } else if (response.status === 403) {
+        const errorData = await response.json();
+        toast({
+          title: "Access Restricted",
+          description: errorData.message || "Admin users cannot place orders",
+          variant: "destructive",
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Error",
+          description: errorData.message || "Failed to place order. Please try again.",
+          variant: "destructive",
+        });
       }
-
-      const order = await response.json();
-      clearCart();
-      
-      toast({
-        title: "Order Placed Successfully!",
-        description: `Order ID: ${order.id}`,
-      });
-      
-      setLocation("/");
     } catch (error) {
       toast({
         title: "Error",

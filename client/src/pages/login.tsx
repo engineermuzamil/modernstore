@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +8,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 
 export default function Login() {
+  const [location] = useLocation();
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { login, register } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  
+
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -26,9 +28,17 @@ export default function Login() {
     lastName: "",
   });
 
+  // Check URL parameters to determine if we're in register mode
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    setIsRegisterMode(mode === 'register');
+  }, [location]);
+
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
       await login(loginForm.email, loginForm.password);
@@ -38,9 +48,11 @@ export default function Login() {
       });
       setLocation("/");
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Invalid credentials";
+      setError(errorMessage);
       toast({
         title: "Login Failed",
-        description: error instanceof Error ? error.message : "Invalid credentials",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -98,6 +110,7 @@ export default function Login() {
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
                       id="firstName"
+                      data-testid="register-first-name"
                       type="text"
                       required
                       value={registerForm.firstName}
@@ -110,6 +123,7 @@ export default function Login() {
                     <Label htmlFor="lastName">Last Name</Label>
                     <Input
                       id="lastName"
+                      data-testid="register-last-name"
                       type="text"
                       required
                       value={registerForm.lastName}
@@ -124,6 +138,7 @@ export default function Login() {
                   <Label htmlFor="registerEmail">Email address</Label>
                   <Input
                     id="registerEmail"
+                    data-testid="register-email"
                     type="email"
                     required
                     value={registerForm.email}
@@ -137,6 +152,7 @@ export default function Login() {
                   <Label htmlFor="registerPassword">Password</Label>
                   <Input
                     id="registerPassword"
+                    data-testid="register-password"
                     type="password"
                     required
                     minLength={6}
@@ -185,6 +201,12 @@ export default function Login() {
                     }
                   />
                 </div>
+
+                {error && (
+                  <div data-testid="error-message" className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
+                    {error}
+                  </div>
+                )}
 
                 <Button
                   data-testid="login-submit"

@@ -39,6 +39,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         const items = await response.json();
         setCartItems(items);
+      } else if (response.status === 403) {
+        // Admin users cannot access cart
+        setCartItems([]);
+        toast({
+          title: "Access Restricted",
+          description: "Admin users cannot access cart functionality",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -76,8 +84,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
           title: "Added to Cart",
           description: "Item has been added to your cart",
         });
+      } else if (response.status === 403) {
+        const errorData = await response.json();
+        toast({
+          title: "Access Restricted",
+          description: errorData.message || "Admin users cannot add items to cart",
+          variant: "destructive",
+        });
       } else {
-        throw new Error("Failed to add to cart");
+        const errorData = await response.json();
+        toast({
+          title: "Error",
+          description: errorData.message || "Failed to add item to cart",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
@@ -106,8 +126,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         await fetchCart();
+      } else if (response.status === 403) {
+        const errorData = await response.json();
+        toast({
+          title: "Access Restricted",
+          description: errorData.message || "Admin users cannot update cart",
+          variant: "destructive",
+        });
       } else {
-        throw new Error("Failed to update cart");
+        const errorData = await response.json();
+        toast({
+          title: "Error",
+          description: errorData.message || "Failed to update cart",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
@@ -138,8 +170,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
           title: "Removed from Cart",
           description: "Item has been removed from your cart",
         });
+      } else if (response.status === 403) {
+        const errorData = await response.json();
+        toast({
+          title: "Access Restricted",
+          description: errorData.message || "Admin users cannot remove items from cart",
+          variant: "destructive",
+        });
       } else {
-        throw new Error("Failed to remove from cart");
+        const errorData = await response.json();
+        toast({
+          title: "Error",
+          description: errorData.message || "Failed to remove item from cart",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
@@ -161,7 +205,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => 
+    return cartItems.reduce((total, item) =>
       total + (parseFloat(item.product.price) * item.quantity), 0
     );
   };

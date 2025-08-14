@@ -16,7 +16,7 @@ import {
   type InsertOrderItem,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, desc, ilike, or } from "drizzle-orm";
+import { eq, and, desc, ilike, or, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
@@ -39,8 +39,11 @@ export interface IStorage {
   clearCart(userId: string): Promise<boolean>;
 
   // Order operations
-  createOrder(order: InsertOrder, items: InsertOrderItem[]): Promise<Order>;
+  createOrder(order: InsertOrder, items: Omit<InsertOrderItem, 'orderId'>[]): Promise<Order>;
   getUserOrders(userId: string): Promise<Order[]>;
+
+  // Product stock operations
+  updateProductStock(productId: string, quantityToDecrease: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -64,7 +67,7 @@ export class DatabaseStorage implements IStorage {
 
   async getProducts(category?: string, search?: string): Promise<Product[]> {
     let query = db.select().from(products);
-    
+
     const conditions = [];
     if (category && category !== 'all') {
       conditions.push(eq(products.category, category as any));
@@ -193,10 +196,10 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount || 0) >= 0;
   }
 
-  async createOrder(order: InsertOrder, items: InsertOrderItem[]): Promise<Order> {
+  async createOrder(order: InsertOrder, items: Omit<InsertOrderItem, 'orderId'>[]): Promise<Order> {
     return db.transaction(async (tx) => {
       const [newOrder] = await tx.insert(orders).values(order).returning();
-      
+
       await tx.insert(orderItems).values(
         items.map(item => ({ ...item, orderId: newOrder.id }))
       );
@@ -205,12 +208,51 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
-  async getUserOrders(userId: string): Promise<Order[]> {
-    return db
+  async getUserOrders(userId: string): Promise<(Order & { orderItems: any[] })[]> {
+    const userOrders = await db
       .select()
       .from(orders)
       .where(eq(orders.userId, userId))
       .orderBy(desc(orders.createdAt));
+
+    // Fetch order items for each order
+    const ordersWithItems = await Promise.all(
+      userOrders.map(async (order) => {
+        const orderItemsWithProducts = await db
+          .select({
+            id: orderItems.id,
+            productId: orderItems.productId,
+            quantity: orderItems.quantity,
+            price: orderItems.price,
+            product: {
+              id: products.id,
+              title: products.title,
+              imageUrl: products.imageUrl,
+              price: products.price,
+            },
+          })
+          .from(orderItems)
+          .innerJoin(products, eq(orderItems.productId, products.id))
+          .where(eq(orderItems.orderId, order.id));
+
+        return {
+          ...order,
+          orderItems: orderItemsWithProducts,
+        };
+      })
+    );
+
+    return ordersWithItems;
+  }
+
+  async updateProductStock(productId: string, quantityToDecrease: number): Promise<void> {
+    await db
+      .update(products)
+      .set({ 
+        stock: sql`${products.stock} - ${quantityToDecrease}`,
+        updatedAt: new Date()
+      })
+      .where(eq(products.id, productId));
   }
 }
 

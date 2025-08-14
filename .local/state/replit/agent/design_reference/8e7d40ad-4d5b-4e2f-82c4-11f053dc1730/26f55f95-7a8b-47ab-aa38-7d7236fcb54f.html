@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Store - Modern Product Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6B7280',
+                        accent: '#10B981',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        error: '#EF4444'
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-card-hover {
+            transition: all 0.3s ease;
+        }
+        .product-card-hover:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 text-gray-900">
+    <!-- Navigation Header -->
+    <!-- @COMPONENT: Navigation [cartItemCount: number, isLoggedIn: boolean] -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-primary">StoreHub</h1>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium" data-testid="nav-home">Home</a>
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium" data-testid="nav-products">Products</a>
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium" data-testid="nav-about">About</a>
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium" data-testid="nav-contact">Contact</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Cart Icon with Counter -->
+                    <div class="relative">
+                        <button class="p-2 text-gray-700 hover:text-primary transition-colors" data-testid="cart-button">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium" data-bind="cartItemCount" data-testid="cart-count">3</span>
+                        </button>
+                    </div>
+                    
+                    <!-- User Actions -->
+                    <div class="flex items-center space-x-2">
+                        <button class="text-gray-700 hover:text-primary font-medium" data-testid="login-button">Login</button>
+                        <span class="text-gray-300">|</span>
+                        <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" data-testid="signup-button">Sign Up</button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-gray-700 hover:text-primary" data-testid="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+
+    <!-- Page Container -->
+    <div class="min-h-screen">
+        <!-- Hero Section -->
+        <!-- @COMPONENT: HeroSection -->
+        <section class="bg-gradient-to-r from-primary/10 to-accent/10 py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                    Discover Amazing Products
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Shop the latest trends with our curated collection of premium products at unbeatable prices.
+                </p>
+                <button class="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors" data-testid="hero-shop-now">
+                    Shop Now <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: HeroSection -->
+
+        <!-- Products Grid Section -->
+        <!-- @COMPONENT: ProductGrid [products: Product[]] -->
+        <section class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+                    <p class="text-gray-600 text-lg">Discover our handpicked selection of premium items</p>
+                </div>
+
+                <!-- Products Grid -->
+                <!-- @MAP: products.map(product => ( -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Product Card 1 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-1">
+                        <!-- Premium wireless headphones in sleek black design on white background -->
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Premium Wireless Headphones" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Premium Wireless Headphones</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">High-quality wireless headphones with noise cancellation and premium sound quality.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$199.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-1" 
+                                        data-event="click:handleAddToCart"
+                                        data-implementation="Should add product to cart and update counter">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-2">
+                        <!-- Modern smartphone with elegant design and premium finish -->
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Smartphone Pro Max" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Smartphone Pro Max</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">Latest smartphone with advanced camera system and lightning-fast processor.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$899.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-2" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-3">
+                        <!-- Luxury mechanical keyboard with RGB backlighting -->
+                        <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Mechanical Gaming Keyboard" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Mechanical Gaming Keyboard</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">Professional mechanical keyboard with RGB lighting and tactile switches.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$159.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-3" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-4">
+                        <!-- Professional camera with lens on clean background -->
+                        <img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Digital Camera Pro" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Digital Camera Pro</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">Professional DSLR camera with high-resolution sensor and advanced autofocus.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$1,299.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-4" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 5 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-5">
+                        <!-- Modern laptop with sleek design and premium build quality -->
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="UltraBook Pro" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">UltraBook Pro</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">Ultra-thin laptop with powerful performance and all-day battery life.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$1,599.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-5" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 6 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-6">
+                        <!-- Smart fitness tracker watch with modern design -->
+                        <img src="https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Smart Fitness Watch" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Smart Fitness Watch</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">Advanced fitness tracker with heart rate monitor and GPS capabilities.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$299.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-6" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 7 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-7">
+                        <!-- Premium wireless speaker with modern aesthetic -->
+                        <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Wireless Speaker Pro" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Wireless Speaker Pro</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">Premium Bluetooth speaker with 360-degree sound and waterproof design.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$179.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-7" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 8 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden product-card-hover" data-testid="product-card-8">
+                        <!-- Gaming mouse with ergonomic design and RGB lighting -->
+                        <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                             alt="Gaming Mouse Elite" 
+                             class="w-full h-48 object-cover" 
+                             data-mock="true">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2" data-bind="product.name">Gaming Mouse Elite</h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2" data-bind="product.description">High-precision gaming mouse with customizable buttons and RGB lighting.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-primary" data-bind="product.price">$89.99</span>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                        data-testid="add-to-cart-8" 
+                                        data-event="click:handleAddToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP -->
+            </div>
+        </section>
+        <!-- @END_COMPONENT: ProductGrid -->
+
+        <!-- Product Detail Page Section (Hidden by default) -->
+        <!-- @COMPONENT: ProductDetail [product: Product] -->
+        <section class="hidden py-16" id="product-detail">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <!-- Professional camera detailed product image -->
+                        <img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=600" 
+                             alt="Digital Camera Pro - Detailed View" 
+                             class="w-full rounded-xl shadow-lg" 
+                             data-mock="true">
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-900 mb-4" data-bind="product.name">Digital Camera Pro</h1>
+                            <p class="text-2xl font-bold text-primary mb-6" data-bind="product.price">$1,299.99</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">Description</h3>
+                            <p class="text-gray-600 leading-relaxed" data-bind="product.fullDescription">
+                                Professional DSLR camera with high-resolution sensor and advanced autofocus system. 
+                                Perfect for professional photographers and enthusiasts alike. Features include 4K video recording, 
+                                dual card slots, weather sealing, and a robust magnesium alloy body built to withstand harsh conditions.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">Key Features</h3>
+                            <ul class="space-y-2 text-gray-600" data-mock="true">
+                                <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> 45.7MP Full-Frame Sensor</li>
+                                <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> 4K/30p Video Recording</li>
+                                <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Dual SD Card Slots</li>
+                                <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Weather Sealed Body</li>
+                            </ul>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm font-medium">Quantity:</label>
+                                <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100" data-testid="quantity-decrease">-</button>
+                                <input type="number" value="1" min="1" class="w-16 h-8 text-center border border-gray-300 rounded" data-testid="quantity-input">
+                                <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100" data-testid="quantity-increase">+</button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <button class="bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors flex-1" 
+                                    data-testid="add-to-cart-detail" 
+                                    data-event="click:handleAddToCartDetail">
+                                Add to Cart <i class="fas fa-shopping-cart ml-2"></i>
+                            </button>
+                            <button class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors" 
+                                    data-testid="add-to-wishlist">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: ProductDetail -->
+
+        <!-- Shopping Cart Page Section (Hidden by default) -->
+        <!-- @COMPONENT: ShoppingCart [cartItems: CartItem[]] -->
+        <section class="hidden py-16" id="shopping-cart">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+
+                <!-- Cart Items -->
+                <!-- @MAP: cartItems.map(item => ( -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                    <div class="flex items-center space-x-6">
+                        <!-- Product image for cart item - wireless headphones -->
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" 
+                             alt="Premium Wireless Headphones" 
+                             class="w-16 h-16 object-cover rounded-lg" 
+                             data-mock="true">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-900" data-bind="item.name">Premium Wireless Headphones</h3>
+                            <p class="text-gray-600 text-sm" data-bind="item.description">High-quality wireless headphones with noise cancellation</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100" 
+                                        data-testid="cart-item-decrease" 
+                                        data-event="click:handleQuantityDecrease">-</button>
+                                <span class="w-8 text-center" data-bind="item.quantity" data-testid="cart-item-quantity">2</span>
+                                <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100" 
+                                        data-testid="cart-item-increase" 
+                                        data-event="click:handleQuantityIncrease">+</button>
+                            </div>
+                            <span class="font-semibold text-primary w-20 text-right" data-bind="item.totalPrice">$399.98</span>
+                            <button class="text-error hover:text-red-700 transition-colors" 
+                                    data-testid="remove-cart-item" 
+                                    data-event="click:handleRemoveItem">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                    <div class="flex items-center space-x-6">
+                        <!-- Product image for cart item - smartphone -->
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" 
+                             alt="Smartphone Pro Max" 
+                             class="w-16 h-16 object-cover rounded-lg" 
+                             data-mock="true">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-900" data-bind="item.name">Smartphone Pro Max</h3>
+                            <p class="text-gray-600 text-sm" data-bind="item.description">Latest smartphone with advanced camera system</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100" 
+                                        data-testid="cart-item-decrease-2" 
+                                        data-event="click:handleQuantityDecrease">-</button>
+                                <span class="w-8 text-center" data-bind="item.quantity" data-testid="cart-item-quantity-2">1</span>
+                                <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100" 
+                                        data-testid="cart-item-increase-2" 
+                                        data-event="click:handleQuantityIncrease">+</button>
+                            </div>
+                            <span class="font-semibold text-primary w-20 text-right" data-bind="item.totalPrice">$899.99</span>
+                            <button class="text-error hover:text-red-700 transition-colors" 
+                                    data-testid="remove-cart-item-2" 
+                                    data-event="click:handleRemoveItem">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP -->
+
+                <!-- Cart Summary -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal</span>
+                            <span data-bind="cart.subtotal" data-testid="cart-subtotal">$1,299.97</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Tax (8.5%)</span>
+                            <span data-bind="cart.tax" data-testid="cart-tax">$110.50</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Shipping</span>
+                            <span data-bind="cart.shipping" data-testid="cart-shipping">Free</span>
+                        </div>
+                        <div class="border-t border-gray-200 pt-3">
+                            <div class="flex justify-between text-xl font-bold">
+                                <span>Total</span>
+                                <span class="text-primary" data-bind="cart.total" data-testid="cart-total">$1,410.47</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full bg-primary text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors mt-6" 
+                            data-testid="checkout-button" 
+                            data-event="click:handleCheckout" 
+                            data-implementation="Should navigate to checkout page">
+                        Proceed to Checkout <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: ShoppingCart -->
+
+        <!-- Checkout Page Section (Hidden by default) -->
+        <!-- @COMPONENT: CheckoutForm -->
+        <section class="hidden py-16" id="checkout">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Checkout Form -->
+                    <div class="space-y-8">
+                        <!-- Customer Information -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h3 class="text-xl font-semibold mb-4">Customer Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                           data-testid="checkout-first-name" 
+                                           data-validation="required">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                           data-testid="checkout-last-name" 
+                                           data-validation="required">
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                                <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                       data-testid="checkout-email" 
+                                       data-validation="required,email">
+                            </div>
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                       data-testid="checkout-phone">
+                            </div>
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h3 class="text-xl font-semibold mb-4">Shipping Address</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Street Address *</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                           data-testid="checkout-address" 
+                                           data-validation="required">
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                               data-testid="checkout-city" 
+                                               data-validation="required">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">State/Province *</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                               data-testid="checkout-state" 
+                                               data-validation="required">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">ZIP/Postal Code *</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                               data-testid="checkout-zip" 
+                                               data-validation="required">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Country *</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                                data-testid="checkout-country" 
+                                                data-validation="required">
+                                            <option>United States</option>
+                                            <option>Canada</option>
+                                            <option>United Kingdom</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h3 class="text-xl font-semibold mb-4">Payment Method</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-3">
+                                    <input type="radio" id="card" name="payment" value="card" checked class="w-4 h-4 text-primary" data-testid="payment-card">
+                                    <label for="card" class="text-gray-700">Credit/Debit Card</label>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <input type="radio" id="paypal" name="payment" value="paypal" class="w-4 h-4 text-primary" data-testid="payment-paypal">
+                                    <label for="paypal" class="text-gray-700">PayPal</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
+                            
+                            <!-- Order Items -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center space-x-4">
+                                    <!-- Product image for checkout summary - wireless headphones -->
+                                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60" 
+                                         alt="Premium Wireless Headphones" 
+                                         class="w-12 h-12 object-cover rounded" 
+                                         data-mock="true">
+                                    <div class="flex-1">
+                                        <p class="font-medium text-sm">Premium Wireless Headphones</p>
+                                        <p class="text-gray-600 text-xs">Qty: 2</p>
+                                    </div>
+                                    <span class="text-sm font-semibold">$399.98</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <!-- Product image for checkout summary - smartphone -->
+                                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60" 
+                                         alt="Smartphone Pro Max" 
+                                         class="w-12 h-12 object-cover rounded" 
+                                         data-mock="true">
+                                    <div class="flex-1">
+                                        <p class="font-medium text-sm">Smartphone Pro Max</p>
+                                        <p class="text-gray-600 text-xs">Qty: 1</p>
+                                    </div>
+                                    <span class="text-sm font-semibold">$899.99</span>
+                                </div>
+                            </div>
+
+                            <!-- Pricing Breakdown -->
+                            <div class="space-y-3 border-t border-gray-200 pt-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Subtotal</span>
+                                    <span data-bind="checkout.subtotal" data-testid="checkout-subtotal">$1,299.97</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Tax</span>
+                                    <span data-bind="checkout.tax" data-testid="checkout-tax">$110.50</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Shipping</span>
+                                    <span data-bind="checkout.shipping" data-testid="checkout-shipping">Free</span>
+                                </div>
+                                <div class="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
+                                    <span>Total</span>
+                                    <span class="text-primary" data-bind="checkout.total" data-testid="checkout-total">$1,410.47</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-primary text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors mt-6" 
+                                    data-testid="place-order-button" 
+                                    data-event="click:handlePlaceOrder" 
+                                    data-implementation="Should validate form and process order">
+                                Place Order <i class="fas fa-lock ml-2"></i>
+                            </button>
+
+                            <p class="text-xs text-gray-500 text-center mt-4">
+                                <i class="fas fa-shield-alt mr-1"></i>
+                                Your payment information is secure and encrypted
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: CheckoutForm -->
+
+        <!-- Admin Dashboard Section (Hidden by default) -->
+        <!-- @COMPONENT: AdminDashboard [user: User, products: Product[]] -->
+        <section class="hidden py-16" id="admin-dashboard">
+            <!-- @STATE: isAuthenticated:boolean = true, currentUser:User = admin -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                    <button class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                            data-testid="add-product-button" 
+                            data-event="click:handleOpenAddProductModal">
+                        <i class="fas fa-plus mr-2"></i>Add Product
+                    </button>
+                </div>
+
+                <!-- Dashboard Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Total Products</p>
+                                <p class="text-2xl font-bold text-gray-900" data-bind="stats.totalProducts" data-testid="total-products">8</p>
+                            </div>
+                            <i class="fas fa-box text-primary text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                                <p class="text-2xl font-bold text-gray-900" data-bind="stats.totalOrders" data-testid="total-orders">42</p>
+                            </div>
+                            <i class="fas fa-shopping-bag text-accent text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Revenue</p>
+                                <p class="text-2xl font-bold text-gray-900" data-bind="stats.revenue" data-testid="total-revenue">$24,891</p>
+                            </div>
+                            <i class="fas fa-dollar-sign text-success text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Customers</p>
+                                <p class="text-2xl font-bold text-gray-900" data-bind="stats.customers" data-testid="total-customers">156</p>
+                            </div>
+                            <i class="fas fa-users text-warning text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Management -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold">Product Management</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- @MAP: products.map(product => ( -->
+                                <tr data-testid="admin-product-row-1">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <!-- Product thumbnail in admin table - wireless headphones -->
+                                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60" 
+                                                 alt="Premium Wireless Headphones" 
+                                                 class="h-10 w-10 rounded-lg object-cover" 
+                                                 data-mock="true">
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900" data-bind="product.name">Premium Wireless Headphones</div>
+                                                <div class="text-sm text-gray-500" data-bind="product.category">Electronics</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-bind="product.price">$199.99</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-bind="product.stock">25</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800" data-bind="product.status">Active</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                        <button class="text-primary hover:text-blue-600" 
+                                                data-testid="edit-product-1" 
+                                                data-event="click:handleEditProduct">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-error hover:text-red-700" 
+                                                data-testid="delete-product-1" 
+                                                data-event="click:handleDeleteProduct">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr data-testid="admin-product-row-2">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <!-- Product thumbnail in admin table - smartphone -->
+                                            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60" 
+                                                 alt="Smartphone Pro Max" 
+                                                 class="h-10 w-10 rounded-lg object-cover" 
+                                                 data-mock="true">
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900" data-bind="product.name">Smartphone Pro Max</div>
+                                                <div class="text-sm text-gray-500" data-bind="product.category">Electronics</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-bind="product.price">$899.99</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-bind="product.stock">12</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800" data-bind="product.status">Active</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                        <button class="text-primary hover:text-blue-600" 
+                                                data-testid="edit-product-2" 
+                                                data-event="click:handleEditProduct">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-error hover:text-red-700" 
+                                                data-testid="delete-product-2" 
+                                                data-event="click:handleDeleteProduct">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr data-testid="admin-product-row-3">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <!-- Product thumbnail in admin table - camera -->
+                                            <img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60" 
+                                                 alt="Digital Camera Pro" 
+                                                 class="h-10 w-10 rounded-lg object-cover" 
+                                                 data-mock="true">
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900" data-bind="product.name">Digital Camera Pro</div>
+                                                <div class="text-sm text-gray-500" data-bind="product.category">Photography</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-bind="product.price">$1,299.99</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-bind="product.stock">8</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800" data-bind="product.status">Low Stock</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                        <button class="text-primary hover:text-blue-600" 
+                                                data-testid="edit-product-3" 
+                                                data-event="click:handleEditProduct">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-error hover:text-red-700" 
+                                                data-testid="delete-product-3" 
+                                                data-event="click:handleDeleteProduct">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- @END_MAP -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: AdminDashboard -->
+
+        <!-- Add/Edit Product Modal (Hidden by default) -->
+        <!-- @COMPONENT: ProductModal [isOpen: boolean, product?: Product] -->
+        <div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" id="product-modal">
+            <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+                    <h3 class="text-xl font-semibold" data-bind="modal.title">Add New Product</h3>
+                    <button class="text-gray-400 hover:text-gray-600" data-testid="close-product-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form class="p-6 space-y-6" data-testid="product-form" data-event="submit:handleProductSubmit">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                   data-testid="product-name-input" 
+                                   data-validation="required">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2 text-gray-500">$</span>
+                                <input type="number" step="0.01" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                       data-testid="product-price-input" 
+                                       data-validation="required,min:0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                        <textarea rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                  data-testid="product-description-input" 
+                                  data-validation="required"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                    data-testid="product-category-input" 
+                                    data-validation="required">
+                                <option value="">Select Category</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="photography">Photography</option>
+                                <option value="computers">Computers</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
+                            <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                   data-testid="product-stock-input" 
+                                   data-validation="required,min:0">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Image URL *</label>
+                        <input type="url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                               data-testid="product-image-input" 
+                               data-validation="required,url" 
+                               placeholder="https://images.unsplash.com/...">
+                        <p class="text-xs text-gray-500 mt-1">Enter a URL to an image (recommended: Unsplash images)</p>
+                    </div>
+
+                    <div class="flex items-center space-x-4 pt-6 border-t border-gray-200">
+                        <button type="button" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors" 
+                                data-testid="cancel-product-button" 
+                                data-event="click:handleCancelProduct">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium" 
+                                data-testid="save-product-button" 
+                                data-implementation="Should validate form and create/update product">
+                            <span data-bind="modal.submitText">Add Product</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ProductModal -->
+    </div>
+
+    <!-- Footer -->
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">StoreHub</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Your trusted destination for premium products at unbeatable prices. 
+                        Shop with confidence and enjoy exceptional customer service.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Info</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Returns</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Categories</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Electronics</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Photography</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Computers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Accessories</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Track Order</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2024 StoreHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // TODO: Implement React-based state management for cart, authentication, and product management
+        // TODO: Implement API integration for CRUD operations
+        // TODO: Add form validation and error handling
+        
+        (function() {
+            // Mock interactive functionality for demonstration
+            // In production, this would be handled by React components and Next.js API routes
+            
+            // Cart functionality placeholder
+            const cartButtons = document.querySelectorAll('[data-testid^="add-to-cart"]');
+            cartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // TODO: Implement cart addition logic
+                    console.log('Add to cart clicked - implement with React state management');
+                    
+                    // Visual feedback
+                    const originalText = this.textContent;
+                    this.textContent = 'Added!';
+                    this.classList.add('bg-green-600');
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.classList.remove('bg-green-600');
+                    }, 1000);
+                });
+            });
+
+            // Navigation between sections (in production, would use Next.js routing)
+            const navButtons = {
+                'cart-button': 'shopping-cart',
+                'checkout-button': 'checkout',
+                'hero-shop-now': 'products-grid'
+            };
+
+            Object.keys(navButtons).forEach(buttonId => {
+                const button = document.querySelector(`[data-testid="${buttonId}"]`);
+                if (button) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        // TODO: Implement Next.js routing
+                        console.log(`Navigate to: ${navButtons[buttonId]}`);
+                    });
+                }
+            });
+
+            // Modal functionality
+            const addProductButton = document.querySelector('[data-testid="add-product-button"]');
+            const closeModalButton = document.querySelector('[data-testid="close-product-modal"]');
+            const productModal = document.getElementById('product-modal');
+
+            if (addProductButton && productModal) {
+                addProductButton.addEventListener('click', function() {
+                    productModal.classList.remove('hidden');
+                });
+            }
+
+            if (closeModalButton && productModal) {
+                closeModalButton.addEventListener('click', function() {
+                    productModal.classList.add('hidden');
+                });
+            }
+
+            // Form submission placeholders
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Implement form validation and API submission
+                    console.log('Form submitted - implement validation and API calls');
+                });
+            });
+
+            // Quantity controls
+            const quantityControls = document.querySelectorAll('[data-testid*="quantity"]');
+            quantityControls.forEach(control => {
+                control.addEventListener('click', function() {
+                    // TODO: Implement quantity management with React state
+                    console.log('Quantity control clicked - implement with React state');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

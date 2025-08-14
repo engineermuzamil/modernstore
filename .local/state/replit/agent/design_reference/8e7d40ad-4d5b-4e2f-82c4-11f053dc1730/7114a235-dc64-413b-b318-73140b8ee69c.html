@@ -1,0 +1,796 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModernStore - E-commerce Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="font-inter bg-gray-50">
+
+    <!-- @COMPONENT: Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-gray-900">ModernStore</h1>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="flex items-center space-x-4">
+                            <a href="#home" class="text-gray-900 hover:text-blue-600 font-medium">Home</a>
+                            <a href="#products" class="text-gray-600 hover:text-blue-600">Products</a>
+                            <a href="#categories" class="text-gray-600 hover:text-blue-600">Categories</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Search Bar -->
+                    <div class="hidden sm:block relative">
+                        <input 
+                            type="text" 
+                            placeholder="Search products..." 
+                            data-testid="search-input"
+                            class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Cart Icon -->
+                    <button data-testid="cart-button" class="relative p-2 text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="flex items-center space-x-2">
+                        <button data-testid="login-button" class="text-gray-600 hover:text-blue-600 font-medium">Login</button>
+                        <span class="text-gray-400">|</span>
+                        <button data-testid="register-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+
+    <!-- @COMPONENT: HomePage -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <section class="mb-12">
+            <!-- Modern tech gadgets on a clean white background -->
+            <div class="relative bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden h-96 flex items-center">
+                <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+                <div class="relative z-10 text-white px-8 md:px-16">
+                    <h2 class="text-4xl md:text-6xl font-bold mb-4">Discover Amazing Products</h2>
+                    <p class="text-xl mb-8 opacity-90">Find everything you need in our curated collection</p>
+                    <button data-testid="hero-cta" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Shop Now
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900">Browse Products</h3>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <!-- Category Filter -->
+                        <select data-testid="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="all">All Categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="home">Home & Garden</option>
+                            <option value="books">Books</option>
+                            <option value="sports">Sports</option>
+                        </select>
+                        
+                        <!-- Mobile Search -->
+                        <div class="sm:hidden relative">
+                            <input 
+                                type="text" 
+                                placeholder="Search products..." 
+                                data-testid="mobile-search-input"
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="mb-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                
+                <!-- Product Card 1 -->
+                <!-- @COMPONENT: ProductCard -->
+                <div data-testid="product-card" data-category="electronics" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Modern wireless headphones on white background -->
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Wireless Headphones" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Premium Wireless Headphones</h3>
+                        <p class="text-gray-600 text-sm mb-3">High-quality audio with noise cancellation</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$299.99</span>
+                            <button data-testid="add-to-cart-1" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: ProductCard -->
+
+                <!-- Product Card 2 -->
+                <div data-testid="product-card" data-category="clothing" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Stylish denim jacket on model -->
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Denim Jacket" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Classic Denim Jacket</h3>
+                        <p class="text-gray-600 text-sm mb-3">Timeless style for any occasion</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$89.99</span>
+                            <button data-testid="add-to-cart-2" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div data-testid="product-card" data-category="home" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Modern coffee maker on kitchen counter -->
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Coffee Maker" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Smart Coffee Maker</h3>
+                        <p class="text-gray-600 text-sm mb-3">Programmable brewing with app control</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$199.99</span>
+                            <button data-testid="add-to-cart-3" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div data-testid="product-card" data-category="books" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Stack of programming books -->
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Programming Books" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">JavaScript Guide</h3>
+                        <p class="text-gray-600 text-sm mb-3">Complete guide to modern JavaScript</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$49.99</span>
+                            <button data-testid="add-to-cart-4" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 -->
+                <div data-testid="product-card" data-category="sports" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Yoga mat and accessories -->
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Yoga Mat Set" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Premium Yoga Mat Set</h3>
+                        <p class="text-gray-600 text-sm mb-3">Eco-friendly with carrying strap</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$79.99</span>
+                            <button data-testid="add-to-cart-5" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 -->
+                <div data-testid="product-card" data-category="electronics" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Modern smartphone on clean background -->
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Smartphone" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Latest Smartphone</h3>
+                        <p class="text-gray-600 text-sm mb-3">5G enabled with amazing camera</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$899.99</span>
+                            <button data-testid="add-to-cart-6" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 7 -->
+                <div data-testid="product-card" data-category="home" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Modern table lamp with warm lighting -->
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Designer Lamp" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Designer Table Lamp</h3>
+                        <p class="text-gray-600 text-sm mb-3">Minimalist design with warm light</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$129.99</span>
+                            <button data-testid="add-to-cart-7" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 8 -->
+                <div data-testid="product-card" data-category="clothing" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
+                    <div class="aspect-square overflow-hidden">
+                        <!-- Comfortable running shoes -->
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400" 
+                             alt="Running Shoes" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">Performance Running Shoes</h3>
+                        <p class="text-gray-600 text-sm mb-3">Lightweight with superior cushioning</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">$159.99</span>
+                            <button data-testid="add-to-cart-8" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    <!-- @END_COMPONENT: HomePage -->
+
+    <!-- @COMPONENT: ProductDetailPage (Hidden by default) -->
+    <div id="product-detail" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Product Image -->
+            <div class="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                <!-- Detailed product image -->
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=600" 
+                     alt="Product Detail" 
+                     class="w-full h-full object-cover">
+            </div>
+            
+            <!-- Product Info -->
+            <div class="flex flex-col">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Premium Wireless Headphones</h1>
+                <p class="text-gray-600 text-lg mb-6">
+                    Experience exceptional audio quality with our premium wireless headphones. 
+                    Featuring advanced noise cancellation technology and comfortable over-ear design 
+                    for long listening sessions.
+                </p>
+                
+                <div class="mb-6">
+                    <span class="text-4xl font-bold text-gray-900">$299.99</span>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Features:</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Active Noise Cancellation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> 30-hour Battery Life</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Wireless & Wired Connectivity</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Premium Build Quality</li>
+                    </ul>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button data-testid="detail-add-to-cart" class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 font-semibold">
+                        Add to Cart
+                    </button>
+                    <button class="p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-heart text-gray-600"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: ProductDetailPage -->
+
+    <!-- @COMPONENT: CartPage (Hidden by default) -->
+    <div id="cart-page" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Cart Items -->
+            <div class="divide-y divide-gray-200">
+                <!-- Cart Item 1 -->
+                <div data-testid="cart-item-1" class="p-6 flex items-center space-x-4">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" 
+                         alt="Cart Item" 
+                         class="w-16 h-16 object-cover rounded-lg">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900">Premium Wireless Headphones</h3>
+                        <p class="text-gray-600">$299.99</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button data-testid="decrease-quantity-1" class="p-1 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-minus text-gray-600"></i>
+                        </button>
+                        <span data-testid="quantity-1" class="w-8 text-center">1</span>
+                        <button data-testid="increase-quantity-1" class="p-1 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-plus text-gray-600"></i>
+                        </button>
+                    </div>
+                    <button data-testid="remove-item-1" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Item 2 -->
+                <div data-testid="cart-item-2" class="p-6 flex items-center space-x-4">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" 
+                         alt="Cart Item" 
+                         class="w-16 h-16 object-cover rounded-lg">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900">Classic Denim Jacket</h3>
+                        <p class="text-gray-600">$89.99</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button data-testid="decrease-quantity-2" class="p-1 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-minus text-gray-600"></i>
+                        </button>
+                        <span data-testid="quantity-2" class="w-8 text-center">2</span>
+                        <button data-testid="increase-quantity-2" class="p-1 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-plus text-gray-600"></i>
+                        </button>
+                    </div>
+                    <button data-testid="remove-item-2" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Cart Summary -->
+            <div class="bg-gray-50 p-6 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Subtotal:</span>
+                    <span data-testid="cart-subtotal" class="text-lg font-semibold">$479.97</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-600">Shipping:</span>
+                    <span class="text-gray-600">$9.99</span>
+                </div>
+                <div class="flex justify-between items-center mb-6 text-xl font-bold">
+                    <span>Total:</span>
+                    <span data-testid="cart-total" class="text-blue-600">$489.96</span>
+                </div>
+                <button data-testid="checkout-button" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: CartPage -->
+
+    <!-- @COMPONENT: CheckoutPage (Hidden by default) -->
+    <div id="checkout-page" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Checkout Form -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-xl font-semibold mb-6">Shipping Information</h2>
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                            <input data-testid="checkout-first-name" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                            <input data-testid="checkout-last-name" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input data-testid="checkout-email" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <input data-testid="checkout-address" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                            <input data-testid="checkout-city" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+                            <input data-testid="checkout-state" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                            <input data-testid="checkout-zip" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 h-fit">
+                <h2 class="text-xl font-semibold mb-6">Order Summary</h2>
+                <div class="space-y-4 mb-6">
+                    <div class="flex justify-between">
+                        <span>Premium Wireless Headphones × 1</span>
+                        <span>$299.99</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Classic Denim Jacket × 2</span>
+                        <span>$179.98</span>
+                    </div>
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between mb-2">
+                            <span>Subtotal</span>
+                            <span>$479.97</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span>Shipping</span>
+                            <span>$9.99</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg">
+                            <span>Total</span>
+                            <span class="text-blue-600">$489.96</span>
+                        </div>
+                    </div>
+                </div>
+                <button data-testid="place-order-button" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold">
+                    Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: CheckoutPage -->
+
+    <!-- @COMPONENT: LoginPage (Hidden by default) -->
+    <div id="login-page" class="hidden min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900">Sign in to your account</h2>
+                <p class="mt-2 text-gray-600">Or register for a new account</p>
+            </div>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email address</label>
+                        <div class="mt-1">
+                            <input data-testid="login-email" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <div class="mt-1">
+                            <input data-testid="login-password" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <button data-testid="login-submit" type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 font-medium">
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Don't have an account?</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button data-testid="register-submit" class="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 font-medium">
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: LoginPage -->
+
+    <!-- @COMPONENT: AdminPage (Hidden by default) -->
+    <div id="admin-page" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+            <button data-testid="add-product-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
+                <i class="fas fa-plus mr-2"></i>Add Product
+            </button>
+        </div>
+
+        <!-- Admin Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <i class="fas fa-box text-blue-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Products</p>
+                        <p class="text-2xl font-bold text-gray-900">24</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <i class="fas fa-shopping-cart text-green-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                        <p class="text-2xl font-bold text-gray-900">147</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-purple-100 rounded-lg">
+                        <i class="fas fa-users text-purple-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Users</p>
+                        <p class="text-2xl font-bold text-gray-900">89</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <i class="fas fa-dollar-sign text-yellow-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Revenue</p>
+                        <p class="text-2xl font-bold text-gray-900">$12.4k</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Products Management</h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr data-testid="admin-product-1">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img class="h-10 w-10 rounded-lg object-cover" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40" alt="">
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Premium Wireless Headphones</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Electronics</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$299.99</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">45</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <button data-testid="edit-product-1" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                <button data-testid="delete-product-1" class="text-red-600 hover:text-red-900">Delete</button>
+                            </td>
+                        </tr>
+                        <tr data-testid="admin-product-2">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img class="h-10 w-10 rounded-lg object-cover" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40" alt="">
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Classic Denim Jacket</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Clothing</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$89.99</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">23</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <button data-testid="edit-product-2" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                <button data-testid="delete-product-2" class="text-red-600 hover:text-red-900">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: AdminPage -->
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">ModernStore</h3>
+                    <p class="text-gray-600 mb-4">Your one-stop destination for premium products. We offer a curated selection of high-quality items to enhance your lifestyle.</p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">About Us</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Contact</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Help Center</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Returns</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Shipping</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+                <p class="text-gray-600">&copy; 2024 ModernStore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // Simple page navigation simulation
+            const pages = ['home', 'product-detail', 'cart-page', 'checkout-page', 'login-page', 'admin-page'];
+            
+            function showPage(pageId) {
+                pages.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.classList.add('hidden');
+                    }
+                });
+                
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                }
+                
+                // Show/hide main content
+                const main = document.querySelector('main');
+                if (pageId === 'home') {
+                    main.classList.remove('hidden');
+                } else {
+                    main.classList.add('hidden');
+                }
+            }
+            
+            // Event listeners for navigation
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                
+                // Handle navigation
+                if (target.matches('[data-testid="cart-button"]')) {
+                    showPage('cart-page');
+                } else if (target.matches('[data-testid="login-button"]')) {
+                    showPage('login-page');
+                } else if (target.matches('[data-testid="checkout-button"]')) {
+                    showPage('checkout-page');
+                } else if (target.matches('a[href="#home"]')) {
+                    e.preventDefault();
+                    showPage('home');
+                } else if (target.closest('[data-testid^="product-card"]')) {
+                    showPage('product-detail');
+                }
+                
+                // TODO: Implement actual cart management, user authentication, and API calls
+                // TODO: Add form validation and error handling
+                // TODO: Implement state management for cart items and user sessions
+                // TODO: Add loading states and success/error messages
+            });
+            
+            // Initialize search and filter functionality
+            const searchInput = document.querySelector('[data-testid="search-input"]');
+            const categoryFilter = document.querySelector('[data-testid="category-filter"]');
+            const productCards = document.querySelectorAll('[data-testid="product-card"]');
+            
+            function filterProducts() {
+                const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+                const selectedCategory = categoryFilter ? categoryFilter.value : 'all';
+                
+                productCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const category = card.dataset.category;
+                    
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesCategory = selectedCategory === 'all' || category === selectedCategory;
+                    
+                    if (matchesSearch && matchesCategory) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // TODO: Replace with actual API calls to /api/products with query parameters
+                // TODO: Implement server-side filtering and pagination
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', filterProducts);
+            }
+            
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterProducts);
+            }
+            
+            // TODO: Implement actual authentication flow
+            // TODO: Add form submissions with proper validation
+            // TODO: Implement cart quantity management
+            // TODO: Add product management for admin users
+            // TODO: Implement order placement and confirmation
+        })();
+    </script>
+
+</body>
+</html>
